@@ -1,0 +1,104 @@
+PENDIENTES
+
+campo personalizado: sumatoria de items EDX
+wf_v_2100136 Trasadar Pedidos - Jorge
+Reporte 522 procedencia pedido: informa-vms-hosting-aliados
+Servicredito POS
+chirico 526 RENTA_DET NIT 805028991 ANO 2020 MES 05: wcartera(chirico317)v_cartera30 pago1 pago2  
+
+
+
+**** PERMISOS A PROGRAMAS
+
+--inscribir nuevos usuarios:  PERPERC
+
+INSERT INTO nue_perpro
+(select 'AAA', COD_MOD, COD_SUB, PROGRAMA, AUTORIZA, F_INGRESO, F_EXPIRA_P, MARCADOR from nue_perpro where usuario = 'BBB');
+
+INSERT INTO nue_perpro01
+(select 'AAA', COD_MOD, COD_SUB, PROGRAMA, PERMISO from nue_perpro01 where usuario = 'BBB');
+
+INSERT INTO PERMCOM
+(select 'AAA', COMPROB, OPCION, F_INGRESO, F_EXPIRACION, AUTORIZADO, HORA_I, HORA_F from PERMCOM where usuario = 'BBB');
+
+INSERT INTO CARTAS
+(select 'AAA', PROGRAMA, COD_REP from CARTAS where usuario = 'BBB');
+
+INSERT INTO WF_PERFIL_USUARIO
+(select COD_PERFIL, 'AAA', F_DESDE, F_HASTA, ESTADO from WF_PERFIL_USUARIO where usuario = 'BBB');
+
+INSERT INTO PERMALM
+(select 'AAA', ALMACEN, ORIDES from PERMALM where usuario = 'BBB');
+
+INSERT INTO PERMCTA
+(select 'AAA', CUENTA, CENTRO, OPCION, FECHA, AUTORIZADO, NITS, COD_ACTIVIDAD from PERMCTA where usuario = 'BBB');
+
+
+INSERT INTO ALMACEN_USUARIO (SELECT ALMACEN, 'AAA', ESTADO, SEPARADO, CODIGO, TIPO_C FROM ALMACEN_USUARIO WHERE USUARIO = 'BBB')
+
+
+insert into WF_RESPONSABLE_CARTERA
+select vendedor, '1004779837', estado from WF_RESPONSABLE_CARTERA where cedula_cartera = '42156946'
+
+
+PUNTO DE VENTA
+INSERT INTO NUE_USUARIO VALUES ('HMORALES','HECTOR MAURICIO MORALES SANCHEZ','1112774276','2016-01-01','2020-12-31',NULL, NULL,'rsn','2016-01-01','rsn','2020-12-31','6c6cbcba8b04810d9994b02b828a9049')
+
+INSERT INTO PERMCOM 
+SELECT usuario,    comprob,    'A',    f_ingreso,    f_expiracion,    autorizado,    hora_i,    hora_f 
+FROM PERMCOM WHERE COMPROB = 'OFL' AND USUARIO IN ('AMVARGAS', 'SUPERPUNTOS') AND OPCION = 'C'
+
+INSERT INTO PERMCAJA
+(select 'AAA', COD_CAJA, ALMACEN, FECHA_INICIA, FECHA_EXPIRA, AUTORIZADO from PERMCAJA where usuario = 'BBB');
+
+
+insert into permcaja values ('YACKE','11','94','2011-12-01','2020-12-30','SOPORTE')  
+
+insert into permcom values ('YACKE','OFU','L','2011-12-01','2030-12-31','SOPORTE', NULL, NULL)  
+
+
+INSERT INTO nue_perpro(
+select 'AAA', COD_MOD, COD_SUB, PROGRAMA, AUTORIZA, F_INGRESO, F_EXPIRA_P, MARCADOR from nue_perpro where usuario = 'BBB'
+AND PROGRAMA NOT IN  (Select PROGRAMA from nue_perpro where usuario = 'AAA'    ));
+
+INSERT INTO nue_perpro01(
+select 'AAA', COD_MOD, COD_SUB, PROGRAMA, PERMISO from nue_perpro01 a where 
+--programa NOT in ('CHIRICO','WCARTERA') AND 
+a.usuario = 'BBB' 
+and (COD_MOD, COD_SUB, PROGRAMA, PERMISO) not in (
+select COD_MOD, COD_SUB, PROGRAMA, PERMISO from nue_perpro01 where usuario = 'AAA'  ));
+
+INSERT INTO PERMCOM(
+select 'AAA', COMPROB, OPCION, F_INGRESO, F_EXPIRACION, AUTORIZADO, HORA_I, HORA_F from PERMCOM where usuario = 'BBB'
+AND (COMPROB,OPCION) NOT IN  (select COMPROB,OPCION from PERMCOM where usuario = 'AAA' ));
+
+INSERT INTO CARTAS(
+select 'AAA', PROGRAMA, COD_REP from CARTAS where usuario = 'BBB' AND (PROGRAMA, COD_REP) NOT IN  (
+select PROGRAMA, COD_REP from CARTAS where usuario = 'AAA'  ));
+
+INSERT INTO PERMALM(
+select 'AAA', ALMACEN, ORIDES from PERMALM where usuario = 'BBB'
+AND (ALMACEN, ORIDES) NOT IN  ( select ALMACEN, ORIDES from PERMALM where usuario = 'AAA' ));
+
+INSERT INTO PERMCAJA(
+select 'AAA', COD_CAJA, ALMACEN, FECHA_INICIA, FECHA_EXPIRA, AUTORIZADO from PERMCAJA where usuario = 'BBB'
+AND (COD_CAJA, ALMACEN) NOT IN  ( select COD_CAJA, ALMACEN from PERMCAJA where usuario = 'AAA' ));
+
+
+---------------------------------------------------
+
+DELETE FROM nue_perpro where usuario = 'CCC';
+
+DELETE FROM nue_perpro01 where usuario = 'CCC';
+
+DELETE FROM PERMCOM where usuario = 'CCC';
+
+DELETE FROM CARTAS where usuario = 'CCC';
+
+DELETE FROM PERMALM where usuario = 'CCC';
+
+DELETE FROM PERMCAJA where usuario = 'CCC';
+
+DELETE FROM WF_PERFIL_USUARIO where usuario = 'CCC';
+
+DELETE FROM ALMACEN_USUARIO where usuario = 'CCC';

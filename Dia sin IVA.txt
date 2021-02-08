@@ -1,0 +1,56 @@
+DIA SIN IVA
+
+
+CON IVA
+
+select 'PENDIENTES', 
+round(SUM ((CANTIDAD * DECODE (TRIM (empresa), 'O', 0, 1)) * VALOR * (1 - (DESCUENTO / 100))* (1 + (IVA / 100))),0) AS V_NETO 
+from vmov where transaccion = 'PEL' and fecha >= '19/06/2020' and empresa = 'L' and estado not in ('A', 'U') and canal = '1401'
+UNION
+select 'FACTURADO', 
+round(SUM ((CANTIDAD * DECODE (TRIM (empresa), 'O', 0, 1)) * VALOR * (1 - (DESCUENTO / 100))* (1 + (IVA / 100))),0) AS V_NETO 
+from vmov where transaccion = 'FA' and fecha >= '19/06/2020' and empresa = 'L' and canal = '1401'
+UNION
+select 'CANT_PENDIENTES',count(*) from movih where transaccion = 'PEL' and numero in (
+select numero 
+from vmov where transaccion = 'PEL' and fecha >= '19/06/2020' and empresa = 'L' and estado not in ('A', 'U') and canal = '1401')
+union 
+select 'CANT_FACTURADO',count(*) from movih where transaccion = 'FA' and numero in (
+select numero 
+from vmov where transaccion = 'FA' and fecha >= '19/06/2020' and empresa = 'L' and canal = '1401')
+
+
+
+SIN IVA
+
+select 'PENDIENTES', 
+round(SUM ((CANTIDAD * DECODE (TRIM (empresa), 'O', 0, 1)) * VALOR * (1 - (DESCUENTO / 100)) ),0) AS V_NETO 
+from vmov where transaccion = 'PEL' and fecha >= '19/06/2020' and empresa = 'L' and estado not in ('A', 'U') and canal = '1401'
+UNION
+select 'FACTURADO', 
+round(SUM ((CANTIDAD * DECODE (TRIM (empresa), 'O', 0, 1)) * VALOR * (1 - (DESCUENTO / 100))  ),0) AS V_NETO 
+from vmov where transaccion = 'FA' and fecha >= '19/06/2020' and empresa = 'L' and canal = '1401'
+UNION
+select 'CANT_PENDIENTES',count(*) from movih where transaccion = 'PEL' and numero in (
+select numero 
+from vmov where transaccion = 'PEL' and fecha >= '19/06/2020' and empresa = 'L' and estado not in ('A', 'U') and canal = '1401')
+union 
+select 'CANT_FACTURADO',count(*) from movih where transaccion = 'FA' and numero in (
+select numero 
+from vmov where transaccion = 'FA' and fecha >= '19/06/2020' and empresa = 'L' and canal = '1401')
+
+
+
+
+
+SELECT 'CANTIDAD', COUNT(*) FROM POSH A WHERE A.TRANSACCION = 'RFA' AND A.FECHA >= '2020-06-19'
+UNION
+SELECT 'VENTA', SUM (B.CANTIDAD * B.VALOR * (1 - (B.DESCUENTO / 100)) ) AS V_NETO 
+FROM POSH A, POSL B WHERE A.TRANSACCION = B.TRANSACCION AND A.NUMERO = B.NUMERO AND A.TRANSACCION = 'RFA' AND A.FECHA >= '2020-06-19'
+
+
+SELECT 'CANTIDAD', COUNT(*) FROM POSH A WHERE A.TRANSACCION = 'OFB' AND A.FECHA >= '2020-06-19' AND A.COD_CAJA NOT IN ('10')
+UNION
+SELECT 'VENTA', SUM (B.CANTIDAD * B.VALOR * (1 - (B.DESCUENTO / 100)) ) AS V_NETO 
+FROM POSH A, POSL B WHERE A.TRANSACCION = B.TRANSACCION AND A.NUMERO = B.NUMERO AND A.TRANSACCION = 'OFB' AND A.FECHA >= '2020-06-19'
+AND A.COD_CAJA NOT IN ('10')

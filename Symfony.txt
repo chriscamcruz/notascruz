@@ -1,0 +1,24 @@
+PRODUCCION  database_host:192.168.0.45
+DESARROLLO  database_host:192.168.0.98
+
+
+ICONOS MENU
+https://fontawesome.com/icons/image
+
+
+bin/console redis:flushdb --client=cache
+bin/console cache:clear -e prod
+$ bin/console redis:flushdb --client=cache
+
+Si tocaron /Entity/   es porque modificaron base de datos
+$ php bin/console doctrine:schema:update --dump-sql
+
+
+
+
+
+
+
+
+
+

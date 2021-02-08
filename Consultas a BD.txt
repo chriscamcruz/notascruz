@@ -1,0 +1,186 @@
+*******************
+ULTIMO COMPROBANTE
+
+declare
+
+comprob VARCHAR(2);
+ultimo_mh NUMBER;
+ultimo_ml NUMBER;
+ultimo_comp NUMBER;
+ultimo_vms NUMBER;
+
+begin FOR V_REG IN (select distinct comprob from comprobante, movih where movih.transaccion = comprobante.comprob and tipo_c = 'FAC' and fecha >= TO_DATE(SYSDATE - 30, 'DD/MM/YYYY'))
+loop
+
+select  nvl(MAX(numero),0) as numero into ultimo_mh from movih where transaccion = V_REG.comprob and fecha >= TO_DATE(SYSDATE - 1, 'DD/MM/YYYY'); --order by numero desc     --40610
+
+select  nvl(MAX(numero),0) as numero into ultimo_ml from movil where transaccion = V_REG.comprob and fecha >= TO_DATE(SYSDATE - 1, 'DD/MM/YYYY'); --order by numero desc     --40610
+
+select  nvl(ultimo,0) as numero into ultimo_comp from comprobante where comprob = V_REG.comprob;     --40610
+
+--select nvl(ultimo,0) into  ultimo_vms from comprobante@link_vms where comprobante = V_REG.comprob;
+
+
+
+if(ultimo_mh > ultimo_ml) then
+
+      dbms_output.put_line('COMPROB:  ' || V_REG.comprob );   
+end if;
+
+
+END LOOP;
+
+end;
+
+
+*******************
+
+PEGGING
+
+SELECT C.TRANSACCION, C.NUMERO FROM PEGGING A, PEGGING B, PEGGING C WHERE A.TRANSACCION1 = 'EFF' AND A.NUMERO1 = 68441 AND A.TRANSACCION = B.TRANSACCION1 AND A.NUMERO = B.NUMERO1 AND B.TRANSACCION = C.TRANSACCION1 AND B.NUMERO = C.NUMERO1 
+
+
+*******************
+
+AUDITORIA DE PERMISOS
+
+select 
+a.usuario, a.nombre, a.nit, c.cargo, d.lista
+from nits d,  nue_usuario a left join v_cargo_vendedor2 c on trim(a.nit) = trim(c.cedula) 
+where  nvl(a.estado, 0) = 1 and a.nit = d.nit
+
+
+select 
+--a.usuario, a.nombre, a.nit, c.cargo, d.lista
+a.usuario, a.nombre, a.nit, c.cargo, d.lista, b.programa, b.permiso
+from nits d, nue_perpro01 b, nue_usuario a left join v_cargo_vendedor2 c on trim(a.nit) = trim(c.cedula) 
+where a.usuario = b.usuario and nvl(a.estado, 0) = 1 and a.nit = d.nit
+--group by a.usuario, a.nombre, a.nit, c.cargo, d.lista
+union
+select 
+--a.usuario, a.nombre, a.nit, c.cargo, d.lista
+a.usuario, a.nombre, a.nit, c.cargo, d.lista, b.programa, 'INGRESO' as permiso
+from nits d, nue_perpro b, nue_usuario a left join v_cargo_vendedor2 c on trim(a.nit) = trim(c.cedula) 
+where a.usuario = b.usuario and nvl(a.estado, 0) = 1 and a.nit = d.nit
+--group by a.usuario, a.nombre, a.nit, c.cargo, d.lista
+order by 1,6,7
+
+select 
+a.usuario, a.nombre, a.nit, c.cargo, b.comprob, d.nom_compr, d.tipo_c, b.opcion
+from  permcom b, comprobante d, nue_usuario a left join v_cargo_vendedor2 c on trim(a.nit) = trim(c.cedula) 
+where a.usuario = b.usuario and nvl(a.estado, 0) = 1 
+and b.usuario = a.usuario and b.comprob = d.comprob
+
+
+***********************
+
+ULTIMA VENTA CLIENTES CORPORATIVO
+
+select * from movih f, 
+ (select c.nit as nit,  max(c.numero) as numero from  
+   (select nit, max (fecha) as fecha from movih where transaccion in ( 'FA', 'EFF') 
+        and f_pago not in (select codigo from f_pago where clase in (1,2))
+        and nit in (
+       select a.nit as nit from nits a, clien b where a.nit = b.nit and a.estado = 'A' and b.canal = '0501'
+                   )
+        group by nit
+        ) a,
+movih c
+where C.NIT = a.nit and c.transaccion in ( 'FA', 'EFF')  AND C.FECHA = A.FECHA
+group by c.nit
+) r
+where r.nit = f.nit and r.numero = f.numero and f.transaccion in ('FA', 'EFF')
+
+************************
+
+
+DOCUMENTO en bodega 9 que no se a facturado
+
+
+select sum(decode(tipo_c, 'FAC', cantidad, -cantidad)) as cantidad_saldo, item, descripcion, nit, nombre, max(numero) from vmov where fecha >= '01/10/2019' and almacen2 = 9 and tipo_c <> 'CAR'
+group by nombre, nit, item, descripcion
+having sum(decode(tipo_c, 'FAC', cantidad, -cantidad)) < 0
+order by item
+
+select * from vmov where fecha >= '01/10/2019' and almacen2 = 9 and tipo_c <> 'CAR' and numero = 85315 and item = 299892339 and nit = 901020769
+
+
+*****************************
+
+
+
+
+select regexp_substr('A, B, C, D', '[^, ]+', 1, 2, 'imx') from dual
+
+select regexp_replace('Tel: (089)123456', '[^0-9]') from dual;
+
+
+SELECT split_part('312-4657-2947', '-', 2) FROM DUAL
+
+SELECT SPLIT_PART('A,B,C,D', ',', 2) FROM DUAL
+
+
+select regexp_substr('A, B, C, D', '[^, ]+', 1, 2, 'imx') from dual
+
+select regexp_replace('Martin Preiss
+Carsten Kaftan
+Lothar Flatz', '([a-zA-Z]+)\ ([a-zA-Z]+)', '\2, \1') from dual;
+
+
+***************************
+
+MEDIDAS: LARGO ANCHO ALTO
+
+select a.producto_codigo, a.largo||' - '|| a.ancho||' - '|| a.alto, a.peso, b.garantia from PRODUCTO_EMPAQUE a left join producto b on trim(b.codigo) = trim(a.producto_codigo) where empaque_codigo = 'UND'
+
+
+**************************
+
+COSTO PROYECTADO
+
+select a.cod_sublinea, c.nom_lin, a.item, b.descripcion, a.por   from COSTO_PROYECTADO a left join inve b on a.item = b.item, linea1 c where a.cod_sublinea = c.linea
+order by 1, 3
+
+
+**************************
+
+ACTIVOS FIJOS TECNOLOGIA
+
+
+select b.*, a.* from 
+(
+SELECT A.NUMEROACTA,
+       A.FECHAENTREGA,
+       F.CEDULA,
+       F.NOMBRE as nombre_persona,
+       F.APELLIDO,
+       F.AREA,
+       A.IDINVENTARIO as IDINVENTARIO_B,
+       CA.NOMBRE
+  FROM AT_ACTA_ENTREGA A, EMPLEADO F, AT_CARGO CA
+ WHERE A.IDEMPLEADO = F.ID AND F.CARGO = CA.ID 
+) a,
+(
+SELECT I.ID as ID_A,
+       I.NUMEROACTIVOFIJO,
+       I.SERIAL,
+       N.NOMBRE as nombre_maquina,
+       M.MODELO,
+       T.NOMBREDISPOSITIVO,
+       C.NOMBRECONDICION,
+       E.NOMBREESTADO
+  FROM AT_INVENTARIO I,
+       AT_CONDICION C,
+       AT_ESTADO E,
+       AT_TIPO_DISPOSITIVO T,
+       AT_MODELO M,
+       AT_MARCA N
+ WHERE     I.IDESTADO = E.ID
+       AND I.IDCONDICION = C.ID
+       AND I.IDMARCA = N.ID
+       AND I.IDMODELO = M.ID
+       AND I.IDTIPODISPOSITIVO = T.ID
+       AND I.IDESTADO = 3
+) b
+where b.ID_A = a.IDINVENTARIO_B
+and a.CEDULA = '1088264507'

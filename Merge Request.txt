@@ -1,0 +1,13 @@
+Si tocaron /Entity/   es porque modificaron base de datos
+
+git pull origin master
+git status
+
+PRODUCCION  database_host:192.168.0.45
+DESARROLLO  database_host:192.168.0.98
+
+
+
+$ bin/console redis:flushdb --client=cache
+$ php bin/console doctrine:schema:update --dump-sql
+

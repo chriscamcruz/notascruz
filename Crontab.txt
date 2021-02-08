@@ -1,0 +1,16 @@
+****************************
+IMAGENES DE CATALOGO - MERCADEO Y CALIDAD - FICHA TECNICA
+
+Mercadeo Ingresa las fotos de productos a
+192.168.0.11    (VMS)        ingreso:   administrador@4dm1n2015
+/portafolio/web/public
+
+crontab  12:10    Crea fichas      -->     /home/administrador/fotos catalogo
+
+crontab 12:00 Fotos producto + cada hora   -->  las envia a 19.168.0.19 (HEOS)
+
+crontab 12:30 Fotos Catalogo  -->  65  <---   DROPBOX  230   <--  TABLET  
+
+
+
+***************************

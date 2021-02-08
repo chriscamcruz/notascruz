@@ -1,0 +1,77 @@
+select * from movih@informa where transaccion = 'ZRP' and factura_c in ( 
+select
+a.id 
+--a.*, b.*, c.username, c.nombre, c.cedula 
+from centro_servicio a, centro_servicio_detalle b, usuario c
+where
+a.id = b.id_centro_servicio and 
+a.usuario = c.id and
+b.estado = 1 and 
+---------------------
+--c.username = 'cas048' and
+--c.cedula = '901089418' and
+c.id in (select id from usuario where username like '%cas%') and  
+a.id_centro_servicio_estado in (5,8)
+)
+
+
+
+
+select B.ITEM, SUM(B.ESTADO) from CENTRO_SERVICIO a , CENTRO_SERVICIO_DETALLE b where A.usuario in (1365) and a.id = b.id_centro_servicio
+AND ID_CENTRO_SERVICIO_ESTADO IN (4,7)
+AND TRIM(B.ITEM) IN ('728995793')
+GROUP BY B.ITEM
+
+
+-----------------------------
+
+1  ORDEN CREADA
+2  REPUESTO SOLICITADO
+3  CARTA DE CAMBIO
+4  REPARADO
+5  PRODUCTO ENTREGADO
+6  GENERADO CC
+7  REPUESTOS ENVIADOS
+8  CARTA ENTREGADA
+9  CARTA DE CAMBIO SOLICITADA
+10 COBRADO
+11 REPUESTOS REVISADOS
+12 ANULADO
+
+--------------------------
+
+
+	Crear la Orden:  Puede tomar 3 caminos:
+	
+	1) Repuestos Solicitados   => Centro de Servicio detalle
+	2) Carta de Cambio
+	3) Reparar sin repuestos
+	
+	
+	CASO A
+	
+1) Orden Creada
+2) Repuestos Solicitados
+11) Repuestos revisados 
+7) Repuestos Enviados      =>    Alm 30 a Alm37  
+	
+El CAS recibe fisicamente el repuesto
+4) Reparado
+5) Producto entregado     => 6) no se genera
+10) Cobrado   => se genera el ZRP y el traslado de Alm 37 a 30 para facturar
+
+	
+	CASO B
+
+1) Orden Creada
+4) Reparado    => sin repuestos
+5) Producto entregado
+10) Cobrado    => se genera el ZRP con 5000% de solo reparacion
+
+
+	CASO C
+
+1) Orden Creada
+9) Solicitud de carta de cambio
+3) Aprueba carta de cambio  => cedi
+8) Entrega carta de cambio
