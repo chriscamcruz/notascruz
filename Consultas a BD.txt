@@ -184,3 +184,29 @@ SELECT I.ID as ID_A,
 ) b
 where b.ID_A = a.IDINVENTARIO_B
 and a.CEDULA = '1088264507'
+
+
+*************************************
+DESCUENTOS HEOS ESPECIALES TIPO 3
+select 
+a.id as id_dscto,
+'Descuentos Especiales' as Tipo_descuento,
+a.nombre_descuento,
+a.vigencia_inicial,
+a.vigencia_final,  
+B.ITEM, B.DESCRIPCION
+--, c.ced_vendedor, nom_vendedor, c.ced_coordinador, c.nom_coordinador
+,c.codigo as cliente, c.nombre, a.usuario as grabador, a.fecha_grabado, a.estado,
+decode(tipo_valor, 1, 'Rango', 'Unico') as tipo_rango ,d.minimo, d.maximo, d.valor
+from descuentos_comerciales a left join product b on A.PRODUCTO = B.ID
+--LEFT JOIN V_coordinador@INFORMA C ON A.VENDEDOR = C.ced_vendedor
+left join cliente c on a.nit = c.codigo
+left join rango_valor d on a.id = d.descuento_comercial 
+where a.tipo_descuento_detalle = 3
+and a.vigencia_inicial >= TO_TIMESTAMP('01/01/2020','DD-MM-YYYY HH24:MI:SS')
+
+
+**************************************
+	INSERTAR EN WORKFLOW CAMBIO DE CEDI
+	
+	Insert into INFORMA.WF_WORKFLOW_DATOS (TRAN_ORI, NUM_ORI, TRAN_ACT, NUM_ACT, TRAN_ANT,NUM_ANT, USUARIO, FECHA, F_VENCE, COD_ACTIVIDAD,ESTADO, NOTA, VALOR, RESPONSABLE)	Values ('PEC', 75031, 'PEC', 75031, 'PEC', 75031, 'INFORMA  ','26/11/2020', '26/11/2020', 2100110, 'T', 'APROBACION AUTOMATICA', 0, 'INFORMA');
