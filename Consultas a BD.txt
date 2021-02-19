@@ -210,3 +210,25 @@ and a.vigencia_inicial >= TO_TIMESTAMP('01/01/2020','DD-MM-YYYY HH24:MI:SS')
 	INSERTAR EN WORKFLOW CAMBIO DE CEDI
 	
 	Insert into INFORMA.WF_WORKFLOW_DATOS (TRAN_ORI, NUM_ORI, TRAN_ACT, NUM_ACT, TRAN_ANT,NUM_ANT, USUARIO, FECHA, F_VENCE, COD_ACTIVIDAD,ESTADO, NOTA, VALOR, RESPONSABLE)	Values ('PEC', 75031, 'PEC', 75031, 'PEC', 75031, 'INFORMA  ','26/11/2020', '26/11/2020', 2100110, 'T', 'APROBACION AUTOMATICA', 0, 'INFORMA');
+
+**********************************
+DEPENDIENTES
+
+select  a.invoice as factura, a.quantity as total_x_producto, a.createt_at,
+d.code as empresa, d.name as nombre_empresa,  b.document as nit_dependiente, b.name as nombre_dependiente, 
+b.last_name apellido_dependiente, b.email, b.phone, b.city, b.is_active,
+c.code as item, c.description as descripcion, c.points as puntos_producto  
+from dep_sales a, users b, DEP_PRODUCTS c, client d where a.dependent_id = b.id
+and a.product_id = c.id
+and d.id = b.company_id
+
+
+******************************
+	DELETE WALISTA
+	
+	delete from wlistasep where codint in (
+	select codint from walista where numcor in(765338, 765325)
+	)
+	
+	update walista set fecha_imp = null, impreso = 0 where numcor in(765338)
+	
