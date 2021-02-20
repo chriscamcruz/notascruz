@@ -4,6 +4,7 @@ reopened = 'f', category = 'Merge',
 closed_at = '2019-12-27 08:40:17', 
 c_costo_de_la_labor_asociado_a = 'Sistema',
 --c_a_aplicaciones_back_office_in_house = 'HEOS'
+--c_B_Aplicaciones_Back_Office_De_Terceros = 'Spiceworks'
 --c_f_redes_y_telecomunicaciones = 'Internet'
 c_e_hardware = 'Impresoras'
 --where id IN ('16784')
@@ -23,6 +24,7 @@ select * from tickets where summary = 'CODIGO DE SEPARACION' and status = 'open'
 update tickets set status = 'closed', priority = '3', assigned_to = '145', reopened = 'f', category = 'Merge', 
 closed_at = '2019-02-25 14:39:58', c_costo_de_la_labor_asociado_a = 'Sistema', 
 c_a_aplicaciones_back_office_in_house = 'Informaweb Logistica'
+--c_B_Aplicaciones_Back_Office_De_Terceros = 'Spiceworks'
 where summary = 'CODIGO DE SEPARACION' 
 --and description like '%%'
 and status = 'open'
