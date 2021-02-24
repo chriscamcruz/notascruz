@@ -85,6 +85,11 @@ select 'AAA', COD_CAJA, ALMACEN, FECHA_INICIA, FECHA_EXPIRA, AUTORIZADO from PER
 AND (COD_CAJA, ALMACEN) NOT IN  ( select COD_CAJA, ALMACEN from PERMCAJA where usuario = 'AAA' ));
 
 
+PERMISOS_CENTRO_OPERA
+
+USUARIO DE BASE DE DATOS
+
+
 ---------------------------------------------------
 
 DELETE FROM nue_perpro where usuario = 'CCC';
