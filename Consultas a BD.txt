@@ -232,3 +232,38 @@ and d.id = b.company_id
 	
 	update walista set fecha_imp = null, impreso = 0 where numcor in(765338)
 	
+
+
+*****************************
+
+CONSULTA DE RCN que no estan en SIESA
+
+select distinct numero, FECHA from movi where valor > 0 and comprob = 'RCN' and fecha between '01/01/2021' and '22/02/2021' and numero not in (
+select numero from csiesa where comprob = 'RCN' and fecha between '01/01/2021' and '22/02/2021')
+order by numero
+
+
+select distinct a.comprob, a.numero, a.fecha, b.numero as csiesa, c.estado as estado_error, c.error as error, d.estado as sincronic  from 
+movi a left join  csiesa b on a.comprob = b.comprob and a.numero = b.numero 
+left join ws_error_siesa c on a.comprob = c.comprob and a.numero = c.numero
+left join ws_sincronizacion_siesa d on a.comprob = d.comprob and a.numero = d.numero
+where a.comprob = 'RCN'and a.numero in (
+ 193629)
+
+
+****************************
+
+FA SIN CUFE
+
+select * from movih a LEFT JOIN MOVIH_CENTRO B ON A.transaccion = B.TRANSACCION AND A.NUMERO = B.NUMERO WHERE A.TRANSACCION = 'FA' AND A.FECHA >= '01/02/2021' AND B.CUFE IS NULL
+
+
+****************************
+
+FTP GUR CON DECIMALES 
+
+select * from movi where tipo_doc = 'GUR' and numero_doc = 8054011
+select * from docs where tipo_doc = 'GUR' and numero_doc = 8054011
+
+update movi set valor = round(valor, 0) where tipo_doc = 'GUR' and numero_doc = 8054011
+update docs set v_inicial = round(v_inicial, 0), saldo_doc = round(saldo_doc, 0) where tipo_doc = 'GUR' and numero_doc = 8054011
