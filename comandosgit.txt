@@ -75,4 +75,16 @@ eval $(ssh-agent -s)    -- Saber si el servidor ssh esta corriendo: muestra un A
 
 ssh-add ~   ruta-donde-guardaste-tu-llave-privada    (ssh-add ~/.ssh/id_rsa)
 
+
+
+--revisar la configuracion del repositorio remoto
+git remote -v
+antes (origin  https://github.com/chriscamcruz/notascruz.git (push))
+
+
 git remote set-url origin url-ssh-del-repositorio-en-github
+
+git remote set-url origin git@github.com:chriscamcruz/notascruz.git
+
+ahora
+origin  git@github.com:chriscamcruz/notascruz.git (push)
