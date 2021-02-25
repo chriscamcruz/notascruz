@@ -42,6 +42,8 @@ git merge
 
 
 
+git clone https://github.com/chriscamcruz/notascruz.git
+
 git clone url_del_servidor_remoto: Nos permite descargar los archivos de la última versión de la rama principal y todo el historial de cambios en la carpeta .git.
 git push: Luego de hacer git add y git commit debemos ejecutar este comando para mandar los cambios al servidor remoto.
 git fetch: Lo usamos para traer actualizaciones del servidor remoto y guardarlas en nuestro repositorio local (en caso de que hayan, por supuesto).
@@ -62,7 +64,7 @@ git remote -v
 # hacer merge para crear un commit con los archivos
 # de ambas partes. Podemos usar git fetch y git merge
 # o solo el git pull con el flag --allow-unrelated-histories:
-git pull origin master --allow-unrelated-histories
+git pull origin master --allow-unrelated-histories  (Fuerza la union de las diferentes historias)
 
 # Por último, ahora sí podemos hacer git push para guardar
 # los cambios de nuestro repositorio local en GitHub:
@@ -117,3 +119,29 @@ Borrar un tag del repositorio remoto: git tag -d nombre-del-tag y git push origi
 Traer el repositorio de github
 
 git clone https://github.com/chriscamcruz/notascruz.git
+
+
+
+DevOps  (Developer Operations)  => lider del equipo que acepta los pull request  (ambiente staging developer)
+Pull request (github),  gitlab (merge request) y bitbucket (push request)
+
+
+Cuando no se es colaborador del proyecto en github, no se realiza clone sino fork
+Forks o Bifurcaciones
+Fork es solo en github, se guarda un repositorio en mi github y se realiza en el pc local el git clone para descargarlo (puede ser por https o por ssh)
+
+git clone https://github.com/chriscamcruz/notascruz.git
+
+----
+
+Cuando se trabaja con fork, los proyectos van avanzando y nuestro codigo local se va quedando atras (desactualizado), entonces lo recomendado es traernos una rama con el master del proyecto real, para estarlo comparando con nuestro master local, y evitar conflictos con cambios que el original vaya ir hachiendo:
+
+git remote add <nombre_del_remoto> <url_del_remoto> 
+git remote upstream https://github.com/freddier/hyperblog
+
+"upstream el es nombre de la rama "recomendado", se puede usar cualquier nonmbre de rama"
+
+
+.gitignore
+
+
